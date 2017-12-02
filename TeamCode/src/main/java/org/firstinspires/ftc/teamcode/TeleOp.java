@@ -1,5 +1,6 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Test;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -8,6 +9,7 @@ import org.firstinspires.ftc.teamcode.BaseClasses.NormalDrive;
 /**
  * Created by candy on 27/09/2017.
  */
+@Disabled
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="MainOp", group="main")
 public class TeleOp extends LinearOpMode{
 
@@ -18,7 +20,7 @@ public class TeleOp extends LinearOpMode{
     private final double leftServoGrab = 0.26;
     private final double rightServoHome = 0.5;
     private final double rightServoGrab = 0.75;
-    
+
     @Override
     public void runOpMode() throws InterruptedException {
         robot.initDrive(this);
