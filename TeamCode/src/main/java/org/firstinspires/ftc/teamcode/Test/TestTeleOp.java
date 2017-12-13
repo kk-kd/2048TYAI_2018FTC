@@ -25,10 +25,7 @@ public class TestTeleOp extends LinearOpMode{
         nav.activate();
 
         while(opModeIsActive()){
-            robot.manualDrive();
             nav.startIdentifying();
-            nav.addNavTelemetry();
-            telemetry.update();
 
         }
     }
