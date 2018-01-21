@@ -38,7 +38,7 @@ public class OmniDrive{
     public OmniDrive(){
     }
 
-    enum Direction{
+    public enum Direction{
         FORWARD,
         BACKWARD,
         LEFT,
@@ -101,7 +101,7 @@ public class OmniDrive{
      *
      * This convention should NOT be changed.  Any new drive system should be configured to react accordingly.
      */
-    public void moveRobot() {
+    private void moveRobot() {
         // calculate required motor speeds to achieve axis motions
         double vLeftRear   = driveAxial - driveLateral - driveYaw;
         double vLeftFront  = driveAxial + driveLateral - driveYaw;
@@ -189,7 +189,7 @@ public class OmniDrive{
     }
 
 
-    public void encoderMove(double distance, Direction direction,double timeout, double speed){
+    public void encoderMove(double distance, Direction direction,double timeoutInSec, double speed){
         resetEncoder(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         resetEncoder(DcMotor.RunMode.RUN_USING_ENCODER);
         setPosition(distance,direction);
@@ -198,7 +198,7 @@ public class OmniDrive{
         setPowerToAllMotors(Math.abs(speed));
 
         while (opMode.opModeIsActive() &&
-                (runtime.seconds() < timeout) &&
+                (runtime.seconds() < timeoutInSec) &&
                 (leftFront.isBusy() || leftRear.isBusy() || rightFront.isBusy() || rightRear.isBusy())) {
 
         }

@@ -13,25 +13,33 @@ import org.firstinspires.ftc.teamcode.BaseClasses.VuforiaUsage;
  */
 @Disabled
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="MainOp", group="main")
-public class TeleOp extends LinearOpMode{
+public class SampleTeleOp extends LinearOpMode{
 
     OmniDrive robot = new OmniDrive();
     VuforiaUsage nav = new VuforiaUsage();
 
     @Override
     public void runOpMode() throws InterruptedException {
+        //base
         robot.initDrive(this);
+
+        //rev identification adn recognition
         nav.initVuforia(this, robot, hardwareMap, VuforiaUsage.TeamOrder.BLUELEFT);
+
         waitForStart();
 
         nav.activate();
 
         while(opModeIsActive()){
+            //vuMark identification
             nav.startIdentifying();
+
+            //auto and manualDrive
+            robot.moveRobot(1,2,3);
             robot.manualDrive();
 
-
-
+            //encoder drive
+            robot.encoderMove(1, OmniDrive.Direction.FORWARD,5,0.5);
         }
     }
 }
