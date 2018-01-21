@@ -1,13 +1,19 @@
 package org.firstinspires.ftc.teamcode.BaseClasses;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 
 public class OmniDrive{
     // Private Members
     private LinearOpMode opMode;
+    private ElapsedTime runtime = new ElapsedTime();
 
     private DcMotor  leftFront      = null;
     private DcMotor  rightFront     = null;
@@ -18,8 +24,25 @@ public class OmniDrive{
     private double  driveLateral    = 0 ;   // Positive is right
     private double  driveYaw        = 0 ;   // Positive is CCW
 
+    static final double     COUNTS_PER_MOTOR_REV    = 757 ;    // MATRIX Motor Encoder; 1440 for TETRIX
+    static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // TODO: change the diameter accordingly
+    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+                                                        (WHEEL_DIAMETER_INCHES * 3.1415);
+
+    BNO055IMU imu;
+    Orientation angles;
+    Acceleration gravity;
+
     /* Constructor */
     public OmniDrive(){
+    }
+
+    enum Direction{
+        FORWARD,
+        BACKWARD,
+        LEFT,
+        RIGHT
     }
 
     /* Initialize standard Hardware interfaces */
@@ -106,6 +129,94 @@ public class OmniDrive{
         opMode.telemetry.addData("Wheels", "LeftFront[%+5.2f], LeftRear[%+5.2f], RightFront[%+5.2f], RightRear[%+5.2f]", vLeftFront, vLeftRear, vRightFront, vRightRear);
         opMode.telemetry.update();
     }
+
+
+    /***
+     * Encoder
+     *
+     * The following methods are designed to provide encoder run in all directions
+     */
+
+    private void resetEncoder(DcMotor.RunMode runMode){
+        leftFront.setMode(runMode);
+        leftRear.setMode(runMode);
+        rightFront.setMode(runMode);
+        rightRear.setMode(runMode);
+    }
+
+    private void setPowerToAllMotors(double power){
+        leftFront. setPower(power);
+        leftRear.  setPower(power);
+        rightFront.setPower(power);
+        rightRear. setPower(power);
+    }
+
+    private void setPosition(double distance, Direction direction){
+
+        int newLeftFrontTarget, newRightFrontTarget,newLeftRearTarget,newRightRearTarget;
+
+        newLeftFrontTarget  = leftFront.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
+        newRightFrontTarget = rightFront.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
+        newLeftRearTarget   = leftRear.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
+        newRightRearTarget  = rightRear.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
+
+        switch (direction){
+            case BACKWARD:
+                newLeftFrontTarget  = -newLeftFrontTarget;
+                newRightFrontTarget = -newRightFrontTarget;
+                newLeftRearTarget   = -newLeftRearTarget;
+                newRightRearTarget  = -newRightRearTarget;
+                break;
+            case LEFT:
+                newLeftFrontTarget  = -newLeftFrontTarget;
+                newRightRearTarget  = -newRightRearTarget;
+                break;
+            case RIGHT:
+                newRightFrontTarget = -newRightFrontTarget;
+                newLeftRearTarget   = -newLeftRearTarget;
+                break;
+            default:
+                break;
+        }
+
+        leftFront.setTargetPosition(newLeftFrontTarget);
+        leftRear.setTargetPosition(newLeftRearTarget);
+        rightFront.setTargetPosition(newRightFrontTarget);
+        rightRear.setTargetPosition(newRightRearTarget);
+
+        resetEncoder(DcMotor.RunMode.RUN_TO_POSITION);
+
+    }
+
+
+    public void encoderMove(double distance, Direction direction,double timeout, double speed){
+        resetEncoder(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        resetEncoder(DcMotor.RunMode.RUN_USING_ENCODER);
+        setPosition(distance,direction);
+
+        runtime.reset();
+        setPowerToAllMotors(Math.abs(speed));
+
+        while (opMode.opModeIsActive() &&
+                (runtime.seconds() < timeout) &&
+                (leftFront.isBusy() || leftRear.isBusy() || rightFront.isBusy() || rightRear.isBusy())) {
+
+        }
+
+        setPowerToAllMotors(0);
+        resetEncoder(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+    }
+
+    /***
+     * Sensor BNO055IMU implementation
+     *
+     * BNO055 is a 9-axis Gyro in REV Expansion Cub
+     * BNO055 usage should have a higher precision than pure encoder drive, and will not be affected by "condition" in Beijing
+     * Encoder should be merely a backup for this implementation
+     */
+
+
 
 
     public void setAxial(double axial)      {driveAxial = Range.clip(axial, -1, 1);}
