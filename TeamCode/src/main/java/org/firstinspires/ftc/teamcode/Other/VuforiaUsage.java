@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.BaseClasses;
+package org.firstinspires.ftc.teamcode.Other;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -16,6 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.BaseClasses.OmniDrive;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +48,7 @@ public class VuforiaUsage {
     private VuforiaTrackables targets;
     private VuforiaTrackable  vuMark;
     private OpMode            opMode;
-    private OmniDrive         robot;
+    private OmniDrive robot;
     private HardwareMap       hardwareMap;
 
     private boolean             targetFound;

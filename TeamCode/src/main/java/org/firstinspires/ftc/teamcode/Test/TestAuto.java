@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.Test;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.BaseClasses.OmniDrive;
-import org.firstinspires.ftc.teamcode.BaseClasses.VuforiaUsage;
 
 /**
  * Created by candy on 27/09/2017.

@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.BaseClasses.AccessoriesController;
 import org.firstinspires.ftc.teamcode.BaseClasses.OmniDrive;
 import org.firstinspires.ftc.teamcode.BaseClasses.VuMarkIdentification;
-import org.firstinspires.ftc.teamcode.BaseClasses.VuforiaUsage;
 
 /**
  * Created by candy on 08/02/2018,and.
