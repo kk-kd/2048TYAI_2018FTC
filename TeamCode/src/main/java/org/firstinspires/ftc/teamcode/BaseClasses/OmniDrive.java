@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.BaseClasses;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -25,10 +27,10 @@ public class OmniDrive{
     private double  driveYaw        = 0 ;   // Positive is CCW
 
     static final double     COUNTS_PER_MOTOR_REV    = 757 ;    // MATRIX Motor Encoder; 1440 for TETRIX
-    static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // TODO: change the diameter accordingly
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-                                                        (WHEEL_DIAMETER_INCHES * 3.1415);
+    static final double     DRIVE_GEAR_REDUCTION    = 1 ;     // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_MM       = 98 ;     // TODO: change the diameter accordingly
+    static final double     COUNTS_PER_MM           = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+                                                        (WHEEL_DIAMETER_MM * 3.1415);
 
     BNO055IMU imu;
     Orientation angles;
@@ -57,8 +59,13 @@ public class OmniDrive{
         leftRear   = this.opMode.hardwareMap.get(DcMotor.class, "leftRear");
         rightRear  = this.opMode.hardwareMap.get(DcMotor.class, "rightRear");
 
+        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+
         // Stop all robot motion by setting each axis value to zero
         moveRobot(0,0,0) ;
+//        initIMU();
+
         this.opMode.telemetry.addData(">","Press start");
         this.opMode.telemetry.update();
     }
@@ -155,10 +162,10 @@ public class OmniDrive{
 
         int newLeftFrontTarget, newRightFrontTarget,newLeftRearTarget,newRightRearTarget;
 
-        newLeftFrontTarget  = leftFront.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
-        newRightFrontTarget = rightFront.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
-        newLeftRearTarget   = leftRear.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
-        newRightRearTarget  = rightRear.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
+        newLeftFrontTarget  = leftFront.getCurrentPosition() + (int)(distance * COUNTS_PER_MM);
+        newRightFrontTarget = rightFront.getCurrentPosition() + (int)(distance * COUNTS_PER_MM);
+        newLeftRearTarget   = leftRear.getCurrentPosition() + (int)(distance * COUNTS_PER_MM);
+        newRightRearTarget  = rightRear.getCurrentPosition() + (int)(distance * COUNTS_PER_MM);
 
         switch (direction){
             case BACKWARD:
@@ -190,18 +197,28 @@ public class OmniDrive{
 
 
     public void encoderMove(double distance, Direction direction,double timeoutInSec, double speed){
+        int flag = 0;
+
         resetEncoder(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         resetEncoder(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        opMode.telemetry.addData("Init","Complete");
+        opMode.telemetry.update();
+
         setPosition(distance,direction);
 
         runtime.reset();
         setPowerToAllMotors(Math.abs(speed));
+        opMode.telemetry.addData("Power", "Set");
+        opMode.telemetry.update();
 
         while (opMode.opModeIsActive() &&
                 (runtime.seconds() < timeoutInSec) &&
-                (leftFront.isBusy() || leftRear.isBusy() || rightFront.isBusy() || rightRear.isBusy())) {
-
+                (leftFront.isBusy() && leftRear.isBusy() && rightFront.isBusy() && rightRear.isBusy())) {
+            flag ++;
         }
+        opMode.telemetry.addData("flag", flag);
+        opMode.telemetry.update();
 
         setPowerToAllMotors(0);
         resetEncoder(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -216,7 +233,23 @@ public class OmniDrive{
      * Encoder should be merely a backup for this implementation
      */
 
+    private void initIMU(){
 
+        // Set up the parameters with which we will use our IMU. Note that integration
+        // algorithm here just reports accelerations to the logcat log; it doesn't actually
+        // provide positional information.
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        //imu in REV is on I2C 0 port
+        imu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
+    }
 
 
     public void setAxial(double axial)      {driveAxial = Range.clip(axial, -1, 1);}

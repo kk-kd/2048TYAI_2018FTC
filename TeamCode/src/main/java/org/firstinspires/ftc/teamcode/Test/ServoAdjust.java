@@ -8,9 +8,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 /**
  * Created by candy on 08/02/2018.
  */
-@Disabled
-@TeleOp(name = "Servo Justification", group = "Test")
-public class ServoJustification extends LinearOpMode{
+//@Disabled
+@TeleOp(name = "Servo Adjust", group = "Test")
+public class ServoAdjust extends LinearOpMode{
 
     Servo servoTest;
     double position = 0;

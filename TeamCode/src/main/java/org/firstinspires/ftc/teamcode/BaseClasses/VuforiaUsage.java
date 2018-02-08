@@ -122,7 +122,9 @@ public class VuforiaUsage {
         //TODO: change the loop condition while the strategy is determined
     }
 
-
+    /**
+     * Called after waitForStart()
+     */
     public void activate(){
 
         if (targets != null)

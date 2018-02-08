@@ -12,26 +12,28 @@ import org.firstinspires.ftc.teamcode.BaseClasses.VuforiaUsage;
 public class TestAuto extends LinearOpMode{
 
     OmniDrive robot = new OmniDrive();
-    VuforiaUsage nav = new VuforiaUsage();
 
     @Override
     public void runOpMode() throws InterruptedException {
         robot.initDrive(this);
-        nav.initVuforia(this, robot, hardwareMap, VuforiaUsage.TeamOrder.BLUELEFT);
         waitForStart();
 
-        nav.activate();
+        robot.encoderMove(500, OmniDrive.Direction.FORWARD, 5, 0.8);
+        robot.encoderMove(500, OmniDrive.Direction.BACKWARD, 5, 0.5);
 
-        while(opModeIsActive()){
-            telemetry.addData("1","1");
-            telemetry.update();
+            /**
+            robot.moveRobot(1,0,0);
+            sleep(3000);
+            robot.moveRobot(-1,0,0);
+            sleep(3000);
             robot.moveRobot(0,1,0);
             sleep(3000);
-            telemetry.addData("2",2);
-            telemetry.update();
-            robot.moveRobot(0,0,0);
+            robot.moveRobot(0,-1,0);
             sleep(3000);
-
-        }
+            robot.moveRobot(0,0,1);
+            sleep(3000);
+            robot.moveRobot(0,0,-1);
+            sleep(3000);
+            **/
     }
 }
