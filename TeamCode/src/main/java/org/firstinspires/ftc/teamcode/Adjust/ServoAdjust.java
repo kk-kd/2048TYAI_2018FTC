@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 /**
  * Created by candy on 08/02/2018.
  */
-//@Disabled
-@TeleOp(name = "Servo Adjust", group = "Test")
+@Disabled
+@TeleOp(name = "Servo Adjust",group = "Test")
 public class ServoAdjust extends LinearOpMode{
 
     Servo servoTest;
@@ -22,11 +22,13 @@ public class ServoAdjust extends LinearOpMode{
 
         waitForStart();
 
-        if(gamepad1.x)  position += 0.05;
-        else if(gamepad1.b) position -= 0.05;
+        while(opModeIsActive()) {
+            if (gamepad1.x) position += 0.05;
+            else if (gamepad1.b) position -= 0.05;
 
-        servoTest.setPosition(position);
+            servoTest.setPosition(position);
 
-        telemetry.addData("servoTest", position);
+            telemetry.addData("servoTest", position);
+        }
     }
 }
