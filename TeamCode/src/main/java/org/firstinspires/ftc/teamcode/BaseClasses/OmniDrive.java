@@ -9,7 +9,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+
+import java.util.Locale;
 
 
 public class OmniDrive{
@@ -34,7 +41,6 @@ public class OmniDrive{
 
     BNO055IMU imu;
     Orientation angles;
-    Acceleration gravity;
 
     /* Constructor */
     public OmniDrive(){
@@ -64,7 +70,6 @@ public class OmniDrive{
 
         // Stop all robot motion by setting each axis value to zero
         moveRobot(0,0,0) ;
-//        initIMU();
 
         this.opMode.telemetry.addData(">","Press start");
         this.opMode.telemetry.update();
@@ -233,7 +238,7 @@ public class OmniDrive{
      * Encoder should be merely a backup for this implementation
      */
 
-    private void initIMU(){
+    public void initIMU(){
 
         // Set up the parameters with which we will use our IMU. Note that integration
         // algorithm here just reports accelerations to the logcat log; it doesn't actually
@@ -251,7 +256,26 @@ public class OmniDrive{
         imu.initialize(parameters);
     }
 
+    public String getAngleInDegree() {
+        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+        new Runnable() {
+            @Override
+            public void run() {
+                // Acquiring the angles is relatively expensive; we don't want
+                // to do that in each of the three items that need that info, as that's
+                // three times the necessary expense.
+                angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            }
+        };
+        return formatAngle(angles.angleUnit, angles.firstAngle);
+    }
 
+    private String formatAngle(AngleUnit angleUnit, double angle) {
+        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
+    }
+    private String formatDegrees(double degrees){
+        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
+    }
     public void setAxial(double axial)      {driveAxial = Range.clip(axial, -1, 1);}
     public void setLateral(double lateral)  {driveLateral = Range.clip(lateral, -1, 1); }
     public void setYaw(double yaw)          {driveYaw = Range.clip(yaw, -1, 1); }
