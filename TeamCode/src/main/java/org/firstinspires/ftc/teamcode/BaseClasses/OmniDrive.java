@@ -1,23 +1,10 @@
 package org.firstinspires.ftc.teamcode.BaseClasses;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-
-import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
-
-import java.util.Locale;
-
 
 public class OmniDrive{
     // Private Members
@@ -38,9 +25,6 @@ public class OmniDrive{
     static final double     WHEEL_DIAMETER_MM       = 98 ;     // TODO: change the diameter accordingly
     static final double     COUNTS_PER_MM           = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                                                         (WHEEL_DIAMETER_MM * 3.1415);
-
-    BNO055IMU imu;
-    Orientation angles;
 
     /* Constructor */
     public OmniDrive(){
@@ -230,52 +214,7 @@ public class OmniDrive{
 
     }
 
-    /***
-     * Sensor BNO055IMU implementation
-     *
-     * BNO055 is a 9-axis Gyro in REV Expansion Cub
-     * BNO055 usage should have a higher precision than pure encoder drive, and will not be affected by "condition" in Beijing
-     * Encoder should be merely a backup for this implementation
-     */
 
-    public void initIMU(){
-
-        // Set up the parameters with which we will use our IMU. Note that integration
-        // algorithm here just reports accelerations to the logcat log; it doesn't actually
-        // provide positional information.
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-        //imu in REV is on I2C 0 port
-        imu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
-    }
-
-    public String getAngleInDegree() {
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-        new Runnable() {
-            @Override
-            public void run() {
-                // Acquiring the angles is relatively expensive; we don't want
-                // to do that in each of the three items that need that info, as that's
-                // three times the necessary expense.
-                angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            }
-        };
-        return formatAngle(angles.angleUnit, angles.firstAngle);
-    }
-
-    private String formatAngle(AngleUnit angleUnit, double angle) {
-        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
-    }
-    private String formatDegrees(double degrees){
-        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
-    }
     public void setAxial(double axial)      {driveAxial = Range.clip(axial, -1, 1);}
     public void setLateral(double lateral)  {driveLateral = Range.clip(lateral, -1, 1); }
     public void setYaw(double yaw)          {driveYaw = Range.clip(yaw, -1, 1); }
