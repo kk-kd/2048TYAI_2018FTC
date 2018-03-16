@@ -15,10 +15,10 @@ public class ServoController {
     Servo leftLift = null;
     Servo rightLift = null;
 
-    final double leftLiftTilt = 0;
-    final double rightLiftTilt = 0.5;
-    final double leftLiftHome = 0.45;
-    final double rightLiftHome =0.05;
+    final double leftLiftHome = 0;
+    final double rightLiftHome = 0.5;
+    final double leftLiftTilt = 0.45;
+    final double rightLiftTilt =0.05;
 
     OpMode opMode;
 
