@@ -42,32 +42,29 @@ public class MotorController {
     public void takeBlock(){
         takeBlock(1,1);
     }
+    public void stopBlock(){
+        takeBlock(0,0);
+    }
+    public void throwBlock(){
+        takeBlock(-1,-1);
+    }
 
     public void takeBlock(double powerLeft, double powerRight){
         rightWheel.setPower(powerRight);
         leftWheel.setPower(powerLeft);
     }
 
-    public void stopBlock(){
-        takeBlock(0,0);
-    }
-
-    public void throwBlock(){
-        takeBlock(-1,-1);
-    }
-
-    public void slideUp(){
-        leftSlide.setPower(1);
-        rightSlide.setPower(1);
-    }
-
     public void slideDown(){
-        leftSlide.setPower(-1);
-        rightSlide.setPower(-1);
+        slideUp(-1,-1);
     }
-
     public void stopSlide(){
-        leftSlide.setPower(0);
-        rightSlide.setPower(0);
+        slideUp(0,0);
+    }
+    public void slideUp(){
+        slideUp(1,1);
+    }
+    public void slideUp(double powerLeft, double powerRight){
+        leftSlide.setPower(powerLeft);
+        rightSlide.setPower(powerRight);
     }
 }

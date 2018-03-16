@@ -41,11 +41,6 @@ public class TestTeleOp extends LinearOpMode{
             else if (gamepad1.a) motorController.slideDown();
             else motorController.stopSlide();
 
-            motorController.takeBlock(-gamepad2.left_stick_y, -gamepad2.right_stick_y);
-
-            if(gamepad2.a) servoController.horizontalBoard();
-            else if(gamepad2.y) servoController.tiltBoard();
-
             if (gamepad1.x){
                 robot.moveRobot(0,0,yawPower);
                 sleep(sleepTime);
@@ -59,6 +54,17 @@ public class TestTeleOp extends LinearOpMode{
 
             if(degree > 270) degree -=360;
             else if (degree < 0) degree += 360;
+
+
+            motorController.takeBlock(-gamepad2.left_stick_y, -gamepad2.right_stick_y);
+            if(gamepad2.left_bumper) motorController.slideUp(0.5,0.5);
+
+            if(gamepad2.a) servoController.horizontalBoard();
+            else if(gamepad2.y) servoController.tiltBoard();
+
+            //==============================
+
+
         }
 
     }

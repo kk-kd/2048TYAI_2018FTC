@@ -54,6 +54,8 @@ public class OmniDrive{
 
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
 
         this.opMode.telemetry.addData(">","Press start");
         this.opMode.telemetry.update();
@@ -70,23 +72,23 @@ public class OmniDrive{
 
         switch (degree){
             case 0:
-                setAxial(axialTwo);
-                setLateral(axialOne);
+                setAxial(-axialOne);
+                setLateral(axialTwo);
                 setYaw(axialThree);
                 break;
             case 90:
-                setAxial(axialOne);
-                setLateral(-axialTwo);
-                setYaw(axialThree);
-                break;
-            case 180:
-                setAxial(-axialTwo);
+                setAxial(axialTwo);
                 setLateral(-axialOne);
                 setYaw(axialThree);
                 break;
+            case 180:
+                setAxial(axialOne);
+                setLateral(-axialTwo);
+                setYaw(-axialThree);
+                break;
             case 270:
-                setAxial(-axialOne);
-                setLateral(axialTwo);
+                setAxial(-axialTwo);
+                setLateral(axialOne);
                 setYaw(axialThree);
                 break;
 
