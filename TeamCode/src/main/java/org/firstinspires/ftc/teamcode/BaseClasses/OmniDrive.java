@@ -49,23 +49,49 @@ public class OmniDrive{
         leftRear   = this.opMode.hardwareMap.get(DcMotor.class, "leftRear");
         rightRear  = this.opMode.hardwareMap.get(DcMotor.class, "rightRear");
 
-        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-
         // Stop all robot motion by setting each axis value to zero
         moveRobot(0,0,0) ;
+
+        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
 
         this.opMode.telemetry.addData(">","Press start");
         this.opMode.telemetry.update();
     }
 
-    public void manualDrive()  {
+    //PHONE SHOULD BE SET ON THE LEFT SIDE
+    public void manualDrive(int degree)  {
         // In this mode the Left stick moves the robot fwd & back, and Right & Left.
         // The Right stick rotates CCW and CW.
 
-        setAxial(-opMode.gamepad1.left_stick_y);
-        setLateral(opMode.gamepad1.left_stick_x);
-        setYaw(-opMode.gamepad1.right_stick_x);
+        float axialOne = opMode.gamepad1.left_stick_y;
+        float axialTwo = opMode.gamepad1.left_stick_x;
+        float axialThree = opMode.gamepad1.left_trigger - opMode.gamepad1.right_trigger;
+
+        switch (degree){
+            case 0:
+                setAxial(axialTwo);
+                setLateral(axialOne);
+                setYaw(axialThree);
+                break;
+            case 90:
+                setAxial(axialOne);
+                setLateral(-axialTwo);
+                setYaw(axialThree);
+                break;
+            case 180:
+                setAxial(-axialTwo);
+                setLateral(-axialOne);
+                setYaw(axialThree);
+                break;
+            case 270:
+                setAxial(-axialOne);
+                setLateral(axialTwo);
+                setYaw(axialThree);
+                break;
+
+        }
+
         moveRobot();
     }
 

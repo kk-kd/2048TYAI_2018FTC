@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.BaseClasses.AccessoriesController;
 import org.firstinspires.ftc.teamcode.BaseClasses.OmniDrive;
 import org.firstinspires.ftc.teamcode.BaseClasses.VuMarkIdentification;
 
@@ -17,7 +16,6 @@ public class AutoBlueMid extends LinearOpMode{
 
     OmniDrive robot;
     VuMarkIdentification vufor;
-    AccessoriesController accessoriesController;
 
     @Override
     public void runOpMode() throws InterruptedException{
@@ -25,11 +23,9 @@ public class AutoBlueMid extends LinearOpMode{
         //init
         robot                 = new OmniDrive();
         vufor                 = new VuMarkIdentification();
-        accessoriesController = new AccessoriesController();
 
         robot.initDrive(this);
         vufor.initVuforia(this, robot, hardwareMap);
-        accessoriesController.init(this);
 
         waitForStart();
         vufor.activate();

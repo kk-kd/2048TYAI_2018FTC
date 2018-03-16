@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 /**
  * Created by candy on 08/02/2018.
  */
-@Disabled
 @TeleOp(name = "Servo Adjust",group = "Test")
 public class ServoAdjust extends LinearOpMode{
 
@@ -29,6 +28,7 @@ public class ServoAdjust extends LinearOpMode{
             servoTest.setPosition(position);
 
             telemetry.addData("servoTest", position);
+            telemetry.update();
         }
     }
 }
