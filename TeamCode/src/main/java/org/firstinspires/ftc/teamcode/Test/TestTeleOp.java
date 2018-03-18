@@ -16,13 +16,17 @@ public class TestTeleOp extends LinearOpMode{
     private double yawPower = 0.5;
     private long   sleepTime = 1000;
 
-    OmniDrive robot = new OmniDrive();
-    MotorController motorController = new MotorController();
-    ServoController servoController = new ServoController();
-    //rightServo Home position is 0.6
+    OmniDrive robot;
+    MotorController motorController;
+    ServoController servoController;
 
     @Override
     public void runOpMode() throws InterruptedException {
+
+        robot = new OmniDrive();
+        motorController = new MotorController();
+        servoController = new ServoController();
+
         servoController.init(this);
         motorController.init(this);
         robot.initDrive(this);
@@ -61,9 +65,6 @@ public class TestTeleOp extends LinearOpMode{
 
             if(gamepad2.a) servoController.horizontalBoard();
             else if(gamepad2.y) servoController.tiltBoard();
-
-            //==============================
-
 
         }
 
