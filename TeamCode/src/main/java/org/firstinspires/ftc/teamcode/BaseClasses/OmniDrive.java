@@ -53,9 +53,6 @@ public class OmniDrive{
         moveRobot(0,0,0) ;
 
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
 
         this.opMode.telemetry.addData(">","Press start");
         this.opMode.telemetry.update();

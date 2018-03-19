@@ -2,8 +2,7 @@ package org.firstinspires.ftc.teamcode.BaseClasses;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
@@ -14,14 +13,30 @@ public class ServoController {
 
     Servo leftLift = null;
     Servo rightLift = null;
+    Servo rightJew = null;
 
-    final double leftLiftHome = 0;
-    final double rightLiftHome = 0.5;
-    final double leftLiftTilt = 0.45;
-    final double rightLiftTilt =0.05;
+//    ColorSensor csRight = null;
+
+    final double LEFT_LIFT_HOME = 0;
+    final double RIGHT_LIFT_HOME = 0.5;
+    final double LEFT_LIFT_TILT = 0.45;
+    final double RIGHT_LIFT_TILT =0.05;
+
+    //TODO: adjust para
+    final double LEFT_JEW_HOME = 0.5;
+    final double LEFT_JEW_TILT = 0;
+
+    final double BLUE_THRESHOLD = 100;
+    final double RED_THRESHOLD  = 100;
 
     OpMode opMode;
 
+
+    public enum Color{
+        RED,
+        BLUE,
+        NULL
+    }
 
     public void init(LinearOpMode opMode) {
 
@@ -31,18 +46,54 @@ public class ServoController {
         // Define and Initialize Motors
         leftLift  = this.opMode.hardwareMap.get(Servo.class, "leftLift");
         rightLift = this.opMode.hardwareMap.get(Servo.class, "rightLift");
+        rightJew  = this.opMode.hardwareMap.get(Servo.class, "leftJew");
 
-        leftLift.setPosition(leftLiftHome);
-        rightLift.setPosition(rightLiftHome);
+//        csRight  = this.opMode.hardwareMap.get(ColorSensor.class, "csRight");
+
+        rightJew.setPosition(LEFT_JEW_HOME);
+        leftLift.setPosition(LEFT_LIFT_HOME);
+        rightLift.setPosition(RIGHT_LIFT_HOME);
     }
 
+
+//    public Color readColor(){
+//        if(csRight.red() > RED_THRESHOLD) return Color.RED;
+//        else if(csRight.blue() > BLUE_THRESHOLD) return Color.BLUE;
+//        return Color.NULL;
+//    }
+
+
     public void tiltBoard(){
-        leftLift.setPosition(leftLiftTilt);
-        rightLift.setPosition(rightLiftTilt);
+        leftLift.setPosition(LEFT_LIFT_TILT);
+        rightLift.setPosition(RIGHT_LIFT_TILT);
     }
 
     public void horizontalBoard(){
-        leftLift.setPosition(leftLiftHome);
-        rightLift.setPosition(rightLiftHome);
+        leftLift.setPosition(LEFT_LIFT_HOME);
+        rightLift.setPosition(RIGHT_LIFT_HOME);
     }
+
+    //In this case, the color sensor should read the jew color at the front
+    //If not, switch two case conditions
+//    public double determineRotation(Color side){
+//        double rotationPower = 0;
+//        Color jewColor = readColor();
+//
+//        switch (side){
+//            case RED:
+//                if (jewColor == Color.BLUE) rotationPower = 0.5;
+//                else if(jewColor == Color.RED) rotationPower = -0.5;
+//                else rotationPower = 0;
+//                break;
+//
+//            case BLUE:
+//                if (jewColor == Color.BLUE) rotationPower = -0.5;
+//                else if(jewColor == Color.RED) rotationPower = 0.5;
+//                else rotationPower = 0;
+//                break;
+//        }
+//        return rotationPower;
+//
+//    }
+
 }
