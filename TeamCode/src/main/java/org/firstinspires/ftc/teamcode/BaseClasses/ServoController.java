@@ -15,7 +15,7 @@ public class ServoController {
     Servo rightLift = null;
     Servo rightJew = null;
 
-//    ColorSensor csRight = null;
+    ColorSensor csRight = null;
 
     final double LEFT_LIFT_HOME = 0;
     final double RIGHT_LIFT_HOME = 0.5;
@@ -56,11 +56,11 @@ public class ServoController {
     }
 
 
-//    public Color readColor(){
-//        if(csRight.red() > RED_THRESHOLD) return Color.RED;
-//        else if(csRight.blue() > BLUE_THRESHOLD) return Color.BLUE;
-//        return Color.NULL;
-//    }
+    public Color readColor(){
+        if(csRight.red() > RED_THRESHOLD) return Color.RED;
+        else if(csRight.blue() > BLUE_THRESHOLD) return Color.BLUE;
+        return Color.NULL;
+    }
 
 
     public void tiltBoard(){
@@ -75,25 +75,25 @@ public class ServoController {
 
     //In this case, the color sensor should read the jew color at the front
     //If not, switch two case conditions
-//    public double determineRotation(Color side){
-//        double rotationPower = 0;
-//        Color jewColor = readColor();
-//
-//        switch (side){
-//            case RED:
-//                if (jewColor == Color.BLUE) rotationPower = 0.5;
-//                else if(jewColor == Color.RED) rotationPower = -0.5;
-//                else rotationPower = 0;
-//                break;
-//
-//            case BLUE:
-//                if (jewColor == Color.BLUE) rotationPower = -0.5;
-//                else if(jewColor == Color.RED) rotationPower = 0.5;
-//                else rotationPower = 0;
-//                break;
-//        }
-//        return rotationPower;
-//
-//    }
+    public double determineRotation(Color side){
+        double rotationPower = 0;
+        Color jewColor = readColor();
+
+        switch (side){
+            case RED:
+                if (jewColor == Color.BLUE) rotationPower = 0.5;
+                else if(jewColor == Color.RED) rotationPower = -0.5;
+                else rotationPower = 0;
+                break;
+
+            case BLUE:
+                if (jewColor == Color.BLUE) rotationPower = -0.5;
+                else if(jewColor == Color.RED) rotationPower = 0.5;
+                else rotationPower = 0;
+                break;
+        }
+        return rotationPower;
+
+    }
 
 }
