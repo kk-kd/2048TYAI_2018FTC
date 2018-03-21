@@ -61,18 +61,15 @@ public class VuMarkIdentification {
 
     public RelicRecoveryVuMark startIdentifying(){
 
-        int time = 0;
         RelicRecoveryVuMark mark = RelicRecoveryVuMark.from(vuMark);
 
-        while (mark != RelicRecoveryVuMark.UNKNOWN && time <10){
-            time ++;
+        if (mark != RelicRecoveryVuMark.UNKNOWN ){
             opMode.telemetry.addData("vuMark visible", mark);
             opMode.telemetry.update();
             return mark;
         }
 
         return RelicRecoveryVuMark.UNKNOWN;
-        //TODO: change the loop condition while the strategy is determined
     }
 
     /**

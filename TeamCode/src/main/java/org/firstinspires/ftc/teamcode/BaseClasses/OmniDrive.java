@@ -147,10 +147,6 @@ public class OmniDrive{
         rightFront.setPower(vRightFront);
         rightRear.setPower(vRightRear);
 
-        // Display Telemetry
-        opMode.telemetry.addData("Axes  ", "A[%+5.2f], L[%+5.2f], Y[%+5.2f]", driveAxial, driveLateral, driveYaw);
-        opMode.telemetry.addData("Wheels", "LeftFront[%+5.2f], LeftRear[%+5.2f], RightFront[%+5.2f], RightRear[%+5.2f]", vLeftFront, vLeftRear, vRightFront, vRightRear);
-        opMode.telemetry.update();
     }
 
 

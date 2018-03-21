@@ -4,7 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.teamcode.BaseClasses.MotorController;
 import org.firstinspires.ftc.teamcode.BaseClasses.OmniDrive;
+import org.firstinspires.ftc.teamcode.BaseClasses.ServoController;
 import org.firstinspires.ftc.teamcode.BaseClasses.VuMarkIdentification;
 
 /**
@@ -15,23 +18,67 @@ import org.firstinspires.ftc.teamcode.BaseClasses.VuMarkIdentification;
 public class AutoBlueMid extends LinearOpMode{
 
     OmniDrive robot;
-    VuMarkIdentification vufor;
+    VuMarkIdentification vuforia;
+    MotorController motorController;
+    ServoController servoController;
+    RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.UNKNOWN;
 
+    private double time = 0;
+    private double rotationPower = 0;
+    private int forwardDistance = 0;
     @Override
     public void runOpMode() throws InterruptedException{
-
         //init
-        robot                 = new OmniDrive();
-        vufor                 = new VuMarkIdentification();
+        robot = new OmniDrive();
+        vuforia = new VuMarkIdentification();
+        motorController = new MotorController();
+        servoController = new ServoController();
 
+        servoController.init(this);
+        motorController.init(this);
         robot.initDrive(this);
-        vufor.initVuforia(this, robot, hardwareMap);
+        vuforia.initVuforia(this, robot, hardwareMap);
 
         waitForStart();
-        vufor.activate();
+        vuforia.activate();
 
         //actions
+        //Jews
+        rotationPower = servoController.determineRotation(ServoController.Color.BLUE);
+        robot.moveRobot(0,0,rotationPower);
+        sleep(1000);
+        robot.moveRobot(0,0,-rotationPower);
+        sleep(1000);
 
+        //vuMark
+        robot.moveRobot(0.5,0,0);
+        while (vuMark == RelicRecoveryVuMark.UNKNOWN && time <= 10){
+            vuMark = vuforia.startIdentifying();
+            time ++;
+        }
+        robot.moveRobot(0,0,0);
+        if(vuMark == RelicRecoveryVuMark.UNKNOWN){
+            telemetry.addData("vuMark", "invisible");
+            vuMark = RelicRecoveryVuMark.CENTER;
+        }
+        robot.moveRobot(1,0,0);
+        sleep(2000);
+        robot.moveRobot(-0.8,0,0);
+        sleep(300);
 
+        //Put block
+        switch (vuMark){
+            case LEFT:
+                forwardDistance = 2000;
+                break;
+            case CENTER:
+                forwardDistance = 3000;
+                break;
+            case RIGHT:
+                forwardDistance = 4000;
+                break;
+        }
+        robot.moveRobot(1,0,0);
+        sleep(forwardDistance);
     }
 }
