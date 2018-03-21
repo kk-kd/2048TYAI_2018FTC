@@ -13,12 +13,12 @@ public class ServoController {
 
     Servo leftLift = null;
     Servo rightLift = null;
-    Servo rightJew = null;
+    Servo leftJew = null;
 
-    ColorSensor csRight = null;
+    ColorSensor csLeft = null;
 
     final double LEFT_LIFT_HOME = 0.4;
-    final double RIGHT_LIFT_HOME = 0.3;
+    final double RIGHT_LIFT_HOME = 0.5;
     final double LEFT_LIFT_TILT = 0.85;
     final double RIGHT_LIFT_TILT =0.05;
 
@@ -46,19 +46,26 @@ public class ServoController {
         // Define and Initialize Motors
         leftLift  = this.opMode.hardwareMap.get(Servo.class, "leftLift");
         rightLift = this.opMode.hardwareMap.get(Servo.class, "rightLift");
-        rightJew  = this.opMode.hardwareMap.get(Servo.class, "leftJew");
+        leftJew = this.opMode.hardwareMap.get(Servo.class, "leftJew");
 
-//        csRight  = this.opMode.hardwareMap.get(ColorSensor.class, "csRight");
+//        csLeft  = this.opMode.hardwareMap.get(ColorSensor.class, "csLeft");
 
-        rightJew.setPosition(LEFT_JEW_HOME);
+        leftJew.setPosition(LEFT_JEW_HOME);
         leftLift.setPosition(LEFT_LIFT_HOME);
         rightLift.setPosition(RIGHT_LIFT_HOME);
     }
 
+    public void jewDown(){
+        leftJew.setPosition(LEFT_JEW_TILT);
+    }
+
+    public void jewBack(){
+        leftJew.setPosition(LEFT_JEW_HOME);
+    }
 
     public Color readColor(){
-        if(csRight.red() > RED_THRESHOLD) return Color.RED;
-        else if(csRight.blue() > BLUE_THRESHOLD) return Color.BLUE;
+        if(csLeft.red() > RED_THRESHOLD) return Color.RED;
+        else if(csLeft.blue() > BLUE_THRESHOLD) return Color.BLUE;
         return Color.NULL;
     }
 
@@ -81,14 +88,14 @@ public class ServoController {
 
         switch (side){
             case RED:
-                if (jewColor == Color.BLUE) rotationPower = 0.5;
-                else if(jewColor == Color.RED) rotationPower = -0.5;
+                if (jewColor == Color.BLUE) rotationPower = -0.5;
+                else if(jewColor == Color.RED) rotationPower = 0.5;
                 else rotationPower = 0;
                 break;
 
             case BLUE:
-                if (jewColor == Color.BLUE) rotationPower = -0.5;
-                else if(jewColor == Color.RED) rotationPower = 0.5;
+                if (jewColor == Color.BLUE) rotationPower = 0.5;
+                else if(jewColor == Color.RED) rotationPower = -0.5;
                 else rotationPower = 0;
                 break;
         }
