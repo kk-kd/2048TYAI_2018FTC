@@ -76,17 +76,17 @@ public class OmniDrive{
                 setYaw(axialThree);
                 break;
             case 90:
-                setAxial(axialTwo);
+                setAxial(-axialTwo);
                 setLateral(-axialOne);
                 setYaw(axialThree);
                 break;
             case 180:
                 setAxial(axialOne);
                 setLateral(-axialTwo);
-                setYaw(-axialThree);
+                setYaw(axialThree);
                 break;
             case 270:
-                setAxial(-axialTwo);
+                setAxial(axialTwo);
                 setLateral(axialOne);
                 setYaw(axialThree);
                 break;

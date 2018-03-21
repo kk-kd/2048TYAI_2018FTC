@@ -17,9 +17,9 @@ public class ServoController {
 
     ColorSensor csRight = null;
 
-    final double LEFT_LIFT_HOME = 0.3;
+    final double LEFT_LIFT_HOME = 0.4;
     final double RIGHT_LIFT_HOME = 0.3;
-    final double LEFT_LIFT_TILT = 0.75;
+    final double LEFT_LIFT_TILT = 0.85;
     final double RIGHT_LIFT_TILT =0.05;
 
     //TODO: adjust para

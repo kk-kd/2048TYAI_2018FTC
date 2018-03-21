@@ -14,7 +14,7 @@ public class TestTeleOp extends LinearOpMode{
 
     private int degree = 0;
     private double yawPower = 1;
-    private long   sleepTime = 2000;
+    private long   sleepTime = 600;
 
     OmniDrive robot;
     MotorController motorController;
@@ -68,6 +68,12 @@ public class TestTeleOp extends LinearOpMode{
 
             motorController.takeBlock(gamepad2.left_stick_y, gamepad2.right_stick_y);
             if(gamepad2.left_bumper) motorController.slideUp(0.5,0.5);
+
+            if (gamepad2.dpad_up) motorController.slideUp(1,0);
+            else if (gamepad2.dpad_left) motorController.slideUp(-1,0);
+
+            if (gamepad2.dpad_down) motorController.slideUp(0,-1);
+            else if (gamepad2.dpad_right) motorController.slideUp(0,1);
 
             telemetry.addData("degree", degree);
             telemetry.update();
