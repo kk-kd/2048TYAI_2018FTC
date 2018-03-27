@@ -40,13 +40,13 @@ public class MotorController {
     }
 
     public void takeBlock(){
-        takeBlock(1,1);
+        takeBlock(1,0.9);
     }
     public void stopBlock(){
         takeBlock(0,0);
     }
     public void throwBlock(){
-        takeBlock(-1,-1);
+        takeBlock(-1,-0.9);
     }
 
     public void takeBlock(double powerLeft, double powerRight){

@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
@@ -13,8 +12,7 @@ import org.firstinspires.ftc.teamcode.BaseClasses.VuMarkIdentification;
 /**
  * Created by candy on 08/02/2018,and.
  */
-@Disabled
-@Autonomous(name = "AutoBlueMid", group = "Auto")
+@Autonomous(name = "AutoBlueMidTest", group = "Auto")
 public class AutoBlueMid extends LinearOpMode{
 
     OmniDrive robot;
@@ -26,6 +24,8 @@ public class AutoBlueMid extends LinearOpMode{
     private double time = 0;
     private double rotationPower = 0;
     private int forwardDistance = 0;
+    private int flag = 0;
+
     @Override
     public void runOpMode() throws InterruptedException{
         //init
@@ -42,46 +42,88 @@ public class AutoBlueMid extends LinearOpMode{
         waitForStart();
         vuforia.activate();
 
-        //actions
-        //Jews
-        rotationPower = servoController.determineRotation(ServoController.Color.BLUE);
-        servoController.jewDown();
-        robot.moveRobot(0,0,rotationPower);
-        sleep(1000);
-        servoController.jewBack();
-        robot.moveRobot(0,0,-rotationPower);
-        sleep(1000);
 
         //vuMark
-        robot.moveRobot(-0.5,0,0);
-        while (vuMark == RelicRecoveryVuMark.UNKNOWN && time <= 10){
+        while (vuMark == RelicRecoveryVuMark.UNKNOWN && time <= 20){
             vuMark = vuforia.startIdentifying();
             time ++;
+            sleep(200);
         }
-        robot.moveRobot(0,0,0);
+
         if(vuMark == RelicRecoveryVuMark.UNKNOWN){
             telemetry.addData("vuMark", "invisible");
+            telemetry.update();
             vuMark = RelicRecoveryVuMark.CENTER;
         }
-        robot.moveRobot(1,0,0);
-        sleep(2000);
-        robot.moveRobot(-0.8,0,0);
-        sleep(300);
+
+        //actions
+        //Jews
+        servoController.jewDown1();
+        sleep(1500);
+        rotationPower = servoController.determineRotation(ServoController.Color.BLUE);
+        while (flag <= 50 && rotationPower == 0.0){
+            rotationPower = servoController.determineRotation(ServoController.Color.BLUE);
+            flag++;
+        }
+
+        telemetry.addData("color", rotationPower);
+        telemetry.update();
+
+        robot.moveRobot(0,0,rotationPower);
+        sleep(400);
+        robot.moveRobot(0,0,0);
+        servoController.jewBack();
+        sleep(400);
+        robot.moveRobot(0,0,-rotationPower);
+        sleep(400);
+        telemetry.addData("status","ready to move");
+        telemetry.update();
+
+        robot.moveRobot(0.2,0,0);
+        sleep(1500);
+        telemetry.addData("status", "move finished");
+        robot.moveRobot(0,0,0);
 
         //Move
         switch (vuMark){
             case LEFT:
-                forwardDistance = 2000;
+                forwardDistance = 100;
                 break;
             case CENTER:
-                forwardDistance = 3000;
+                forwardDistance = 400;
                 break;
             case RIGHT:
-                forwardDistance = 4000;
+                forwardDistance = 700;
                 break;
         }
-        robot.encoderMove(forwardDistance, OmniDrive.Direction.FORWARD,5000,0.8);
+        sleep(1000);
+        robot.moveRobot(-0.2,0,0);
+        sleep(900);
+        robot.encoderMoveForward(forwardDistance,3,-0.8);
+        robot.moveRobot(0,0,0);
 
         //Put block
+        robot.encoderMoveTurn(920,3,-0.4);
+        robot.moveRobot(0,0,0);
+        sleep(1000);
+        robot.moveRobot(0.3,0,0);
+        sleep(300);
+        servoController.tiltBoard();
+        robot.moveRobot(0,0,0);
+        sleep(2000);
+        servoController.horizontalBoard();
+        sleep(1000);
+        robot.moveRobot(-0.25,0,0);
+        sleep(500);
+        robot.moveRobot(-0.25,0,0);
+        sleep(100);
+
+        robot.moveRobot(0.3,0,0);
+        sleep(300);
+        robot.moveRobot(-0.3,0,0);
+        sleep(600);
+        robot.moveRobot(0,0,0);
+
+
     }
 }

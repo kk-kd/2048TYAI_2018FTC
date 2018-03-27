@@ -53,8 +53,12 @@ public class OmniDrive{
         moveRobot(0,0,0) ;
 
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         this.opMode.telemetry.addData(">","Press start");
         this.opMode.telemetry.update();
@@ -126,10 +130,10 @@ public class OmniDrive{
      */
     private void moveRobot() {
         // calculate required motor speeds to achieve axis motions
-        double vLeftRear   = driveAxial + driveLateral - driveYaw;
-        double vLeftFront  = driveAxial - driveLateral - driveYaw;
-        double vRightRear  = driveAxial + driveLateral + driveYaw;
-        double vRightFront = driveAxial - driveLateral + driveYaw;
+        double vLeftRear   = -driveAxial - driveLateral + driveYaw;
+        double vLeftFront  = -driveAxial + driveLateral + driveYaw;
+        double vRightRear  = -driveAxial + driveLateral - driveYaw;
+        double vRightFront = -driveAxial - driveLateral - driveYaw;
 
         // normalize all motor speeds so no values exceeds 100%.
         double max = Math.max(Math.max(Math.abs(vLeftFront), Math.abs(vLeftRear)), Math.max(Math.abs(vRightFront), Math.abs(vRightRear)));
@@ -155,14 +159,14 @@ public class OmniDrive{
      *
      * The following methods are designed to provide encoder run in all directions
      */
-
-    private void resetEncoder(DcMotor.RunMode runMode){
-        leftFront.setMode(runMode);
-        leftRear.setMode(runMode);
-        rightFront.setMode(runMode);
-        rightRear.setMode(runMode);
-    }
-
+//
+//    private void resetEncoder(DcMotor.RunMode runMode){
+//        leftFront.setMode(runMode);
+//        leftRear.setMode(runMode);
+//        rightFront.setMode(runMode);
+//        rightRear.setMode(runMode);
+//    }
+//
     private void setPowerToAllMotors(double power){
         leftFront. setPower(power);
         leftRear.  setPower(power);
@@ -170,73 +174,228 @@ public class OmniDrive{
         rightRear. setPower(power);
     }
 
-    private void setPosition(double distance, Direction direction){
+//    private void setPosition(double distance, Direction direction){
+//
+//        int newLeftFrontTarget, newRightFrontTarget,newLeftRearTarget,newRightRearTarget;
+//
+//        newLeftFrontTarget  = leftFront.getCurrentPosition() - (int)(distance * COUNTS_PER_MM);
+//        newRightFrontTarget = rightFront.getCurrentPosition() + (int)(distance * COUNTS_PER_MM);
+//        newLeftRearTarget   = leftRear.getCurrentPosition() - (int)(distance * COUNTS_PER_MM);
+//        newRightRearTarget  = rightRear.getCurrentPosition() - (int)(distance * COUNTS_PER_MM);
+//
+//        switch (direction){
+//            case BACKWARD:
+//                newLeftFrontTarget  = -newLeftFrontTarget;
+//                newRightFrontTarget = -newRightFrontTarget;
+//                newLeftRearTarget   = -newLeftRearTarget;
+//                newRightRearTarget  = -newRightRearTarget;
+//                break;
+//            case RIGHT:
+//                newRightFrontTarget  = -newRightFrontTarget;
+//                newLeftFrontTarget = -newLeftFrontTarget;
+//                newLeftRearTarget = -newLeftRearTarget;
+//                break;
+//
+//            case LEFT:
+//                newRightRearTarget = -newRightRearTarget;
+//                break;
+//            default:
+//                break;
+//        }
+//
+//        leftFront.setTargetPosition(newLeftFrontTarget);
+//        leftRear.setTargetPosition(newLeftRearTarget);
+//        rightFront.setTargetPosition(newRightFrontTarget);
+//        rightRear.setTargetPosition(newRightRearTarget);
+//
+//        resetEncoder(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//    }
 
-        int newLeftFrontTarget, newRightFrontTarget,newLeftRearTarget,newRightRearTarget;
+    private void setPosition(double distance){
 
-        newLeftFrontTarget  = leftFront.getCurrentPosition() + (int)(distance * COUNTS_PER_MM);
-        newRightFrontTarget = rightFront.getCurrentPosition() + (int)(distance * COUNTS_PER_MM);
-        newLeftRearTarget   = leftRear.getCurrentPosition() + (int)(distance * COUNTS_PER_MM);
-        newRightRearTarget  = rightRear.getCurrentPosition() + (int)(distance * COUNTS_PER_MM);
+        int newLeftRearTarget;
 
-        switch (direction){
-            case BACKWARD:
-                newLeftFrontTarget  = -newLeftFrontTarget;
-                newRightFrontTarget = -newRightFrontTarget;
-                newLeftRearTarget   = -newLeftRearTarget;
-                newRightRearTarget  = -newRightRearTarget;
-                break;
-            case LEFT:
-                newLeftFrontTarget  = -newLeftFrontTarget;
-                newRightRearTarget  = -newRightRearTarget;
-                break;
-            case RIGHT:
-                newRightFrontTarget = -newRightFrontTarget;
-                newLeftRearTarget   = -newLeftRearTarget;
-                break;
-            default:
-                break;
-        }
+        newLeftRearTarget  = leftRear.getCurrentPosition() - (int)(distance * COUNTS_PER_MM);
 
-        leftFront.setTargetPosition(newLeftFrontTarget);
         leftRear.setTargetPosition(newLeftRearTarget);
-        rightFront.setTargetPosition(newRightFrontTarget);
-        rightRear.setTargetPosition(newRightRearTarget);
-
-        resetEncoder(DcMotor.RunMode.RUN_TO_POSITION);
+        leftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
     }
 
 
-    public void encoderMove(double distance, Direction direction,double timeoutInSec, double speed){
+
+//    public void encoderMove(double distance, Direction direction,double timeoutInSec, double speed){
+//        int flag = 0;
+//
+//        resetEncoder(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        resetEncoder(DcMotor.RunMode.RUN_USING_ENCODER);
+//
+//        opMode.telemetry.addData("Init","Complete");
+//        opMode.telemetry.update();
+//
+//        setPosition(distance,direction);
+//
+//        runtime.reset();
+//        setPowerToAllMotors(Math.abs(speed));
+//        opMode.telemetry.addData("Power", "Set");
+//        opMode.telemetry.update();
+//
+//        while (opMode.opModeIsActive() &&
+//                (runtime.seconds() < timeoutInSec) &&
+//                (leftFront.isBusy() && leftRear.isBusy() && rightFront.isBusy() && rightRear.isBusy())) {
+//            flag ++;
+//        }
+//        opMode.telemetry.addData("flag", flag);
+//        opMode.telemetry.update();
+//
+//        setPowerToAllMotors(0);
+//        resetEncoder(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//
+//    }
+
+    public void encoderMoveForward(double distance,double timeoutInSec, double speed){
         int flag = 0;
 
-        resetEncoder(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        resetEncoder(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         opMode.telemetry.addData("Init","Complete");
         opMode.telemetry.update();
 
-        setPosition(distance,direction);
+        setPosition(distance);
 
         runtime.reset();
-        setPowerToAllMotors(Math.abs(speed));
-        opMode.telemetry.addData("Power", "Set");
+        setPowerToAllMotors(speed);
+        opMode.telemetry.addData("Power", speed);
         opMode.telemetry.update();
 
         while (opMode.opModeIsActive() &&
                 (runtime.seconds() < timeoutInSec) &&
-                (leftFront.isBusy() && leftRear.isBusy() && rightFront.isBusy() && rightRear.isBusy())) {
+                (leftRear.isBusy())) {
             flag ++;
         }
         opMode.telemetry.addData("flag", flag);
         opMode.telemetry.update();
 
         setPowerToAllMotors(0);
-        resetEncoder(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        opMode.telemetry.addData("status", "end");
+        opMode.telemetry.update();
 
     }
 
+    public void encoderMoveBackfoward(double distance,double timeoutInSec, double speed){
+        int flag = 0;
+
+        leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        opMode.telemetry.addData("Init","Complete");
+        opMode.telemetry.update();
+
+        int newLeftRearTarget;
+
+        newLeftRearTarget  = leftRear.getCurrentPosition() + (int)(distance * COUNTS_PER_MM);
+
+        leftRear.setTargetPosition(newLeftRearTarget);
+        leftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        runtime.reset();
+        leftFront.setPower(speed);
+        leftRear.setPower(-speed);
+        rightFront.setPower(speed);
+        rightRear.setPower(speed);
+        opMode.telemetry.addData("Power", speed);
+        opMode.telemetry.update();
+
+        while (opMode.opModeIsActive() &&
+                (runtime.seconds() < timeoutInSec) &&
+                (leftRear.isBusy())) {
+            flag ++;
+        }
+        opMode.telemetry.addData("flag", flag);
+        opMode.telemetry.update();
+
+        setPowerToAllMotors(0);
+        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        opMode.telemetry.addData("status", "end");
+        opMode.telemetry.update();
+
+    }
+
+    public void encoderMoveRight(double distance, double timeoutInSec, double speed){
+        int flag = 0;
+
+        leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        opMode.telemetry.addData("Init","Complete");
+        opMode.telemetry.update();
+
+        setPosition(distance);
+
+        runtime.reset();
+        leftFront.setPower(speed);
+        leftRear.setPower(-speed);
+        rightFront.setPower(-speed);
+        rightRear.setPower(speed);
+
+        opMode.telemetry.addData("Power", speed);
+        opMode.telemetry.update();
+
+        while (opMode.opModeIsActive() &&
+                (runtime.seconds() < timeoutInSec) &&
+                (leftRear.isBusy())) {
+            flag ++;
+        }
+        opMode.telemetry.addData("flag", flag);
+        opMode.telemetry.update();
+
+        setPowerToAllMotors(0);
+        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        opMode.telemetry.addData("status", "end");
+        opMode.telemetry.update();
+
+    }
+
+
+    public void encoderMoveTurn(double distance, double timeoutInSec, double speed){
+        int flag = 0;
+
+        leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        opMode.telemetry.addData("Init","Complete");
+        opMode.telemetry.update();
+
+        setPosition(distance);
+
+
+
+        runtime.reset();
+        leftFront.setPower(speed);
+        leftRear.setPower(speed);
+        rightFront.setPower(-speed);
+        rightRear.setPower(-speed);
+
+        opMode.telemetry.addData("Power", speed);
+        opMode.telemetry.update();
+
+        while (opMode.opModeIsActive() &&
+                (runtime.seconds() < timeoutInSec) &&
+                (leftRear.isBusy())) {
+            flag ++;
+        }
+        opMode.telemetry.addData("flag", flag);
+        opMode.telemetry.update();
+
+        setPowerToAllMotors(0);
+        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        opMode.telemetry.addData("status", "end");
+        opMode.telemetry.update();
+
+    }
 
     public void setAxial(double axial)      {driveAxial = Range.clip(axial, -1, 1);}
     public void setLateral(double lateral)  {driveLateral = Range.clip(lateral, -1, 1); }

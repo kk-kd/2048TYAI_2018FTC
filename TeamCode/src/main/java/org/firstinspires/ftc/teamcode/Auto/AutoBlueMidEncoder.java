@@ -12,8 +12,8 @@ import org.firstinspires.ftc.teamcode.BaseClasses.VuMarkIdentification;
 /**
  * Created by candy on 08/02/2018,and.
  */
-@Autonomous(name = "AutoRedMid", group = "Auto")
-public class AutoRedMid extends LinearOpMode{
+@Autonomous(name = "AutoBlueMidEncoder", group = "Auto")
+public class AutoBlueMidEncoder extends LinearOpMode{
 
     OmniDrive robot;
     VuMarkIdentification vuforia;
@@ -59,10 +59,10 @@ public class AutoRedMid extends LinearOpMode{
         //actions
         //Jews
         servoController.jewDown1();
-        sleep(1500);
-        rotationPower = servoController.determineRotation(ServoController.Color.RED);
-        while (flag <= 50 && rotationPower == 0.0){
-            rotationPower = servoController.determineRotation(ServoController.Color.RED);
+        sleep(500);
+        rotationPower = servoController.determineRotation(ServoController.Color.BLUE);
+        while (flag <= 50 && rotationPower == 0.0){                                         //TODO
+            rotationPower = servoController.determineRotation(ServoController.Color.BLUE);
             flag++;
         }
 
@@ -77,39 +77,32 @@ public class AutoRedMid extends LinearOpMode{
         robot.moveRobot(0,0,0);
         sleep(400);
         robot.moveRobot(0,0,-rotationPower);
-        sleep(300);
+        sleep(400);
         robot.moveRobot(0,0,0);
         sleep(400);
         telemetry.addData("status","ready to move");
         telemetry.update();
 
-        robot.moveRobot(-0.2,0,0);
+        robot.moveRobot(0.2,0,0);
         sleep(1500);
         telemetry.addData("status", "move finished");
         robot.moveRobot(0,0,0);
 
-        robot.moveRobot(0,0,1);
-        sleep(600);
-        robot.moveRobot(0,0,0);
-        sleep(600);
-        robot.moveRobot(0,0,1);
-        sleep(600);
-
         //Move
         switch (vuMark){
             case LEFT:
-                forwardDistance = 150;
-                break;
-            case CENTER:
                 forwardDistance = 450;
                 break;
+            case CENTER:
+                forwardDistance = 630;
+                break;
             case RIGHT:
-                forwardDistance = 830;
+                forwardDistance = 880;
                 break;
         }
         sleep(1000);
         robot.moveRobot(-0.2,0,0);
-        sleep(900);
+        sleep(1000);
         robot.encoderMoveForward(forwardDistance,3,-0.3);
         robot.moveRobot(0,0,0);
 
@@ -123,14 +116,16 @@ public class AutoRedMid extends LinearOpMode{
         servoController.tiltBoard();
         robot.moveRobot(0,0,0);
         sleep(2000);
+        robot.moveRobot(0.25,0,0);
+        sleep(600);
+        robot.moveRobot(0,0,0);
+
         servoController.horizontalBoard();
         sleep(1000);
-        robot.moveRobot(-0.25,0,0);
-        sleep(500);
 
-        robot.moveRobot(0.3,0,0);
-        sleep(300);
         robot.moveRobot(-0.3,0,0);
+        sleep(800);
+        robot.moveRobot(0.25,0,0);
         sleep(600);
         robot.moveRobot(0,0,0);
 

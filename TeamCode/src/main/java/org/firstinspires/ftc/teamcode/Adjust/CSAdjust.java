@@ -21,7 +21,7 @@ public class CSAdjust extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException{
         robot = new OmniDrive();
-        colorSensor = hardwareMap.get(ColorSensor.class, "CS");
+        colorSensor = hardwareMap.get(ColorSensor.class, "csLeft");
 
         float hsvValues[] = {0F, 0F, 0F};
         final float values[] = hsvValues;

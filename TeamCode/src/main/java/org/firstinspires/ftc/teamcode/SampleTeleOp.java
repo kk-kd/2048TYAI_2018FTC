@@ -36,7 +36,7 @@ public class SampleTeleOp extends LinearOpMode{
             robot.manualDrive(0);
 
             //encoder drive
-            robot.encoderMove(1, OmniDrive.Direction.FORWARD,5,0.5);
+            robot.encoderMoveForward(1,5,0.5);
         }
     }
 

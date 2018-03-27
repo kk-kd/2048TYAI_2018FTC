@@ -24,9 +24,19 @@ public class TestIMU extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
+
+            imu.getAngles();
+            telemetry.addData("angles","get");
+            telemetry.update();
+
             heading = imu.getHeadingInDegree();
+            telemetry.addData("headingInDegree", "get");
+            telemetry.update();
+
             roll    = imu.getRollInDegree();
             pitch   = imu.getPitchInDegree();
+
+            telemetry.addData("telementry", "begin");
 
             telemetry.addData("Heading", heading);
             telemetry.addData("Roll", roll);

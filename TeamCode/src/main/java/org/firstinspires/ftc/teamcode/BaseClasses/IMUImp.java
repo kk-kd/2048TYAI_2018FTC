@@ -52,8 +52,7 @@ public class IMUImp {
         imu.initialize(parameters);
     }
 
-    public String getHeadingInDegree() {
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+    public void getAngles(){
         new Runnable() {
             @Override
             public void run() {
@@ -63,6 +62,8 @@ public class IMUImp {
                 angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             }
         };
+    }
+    public String getHeadingInDegree() {
         return formatAngle(angles.angleUnit, angles.firstAngle);
     }
 
@@ -74,10 +75,11 @@ public class IMUImp {
         return formatAngle(angles.angleUnit, angles.thirdAngle);
     }
 
-    private String formatAngle(AngleUnit angleUnit, double angle) {
+    String formatAngle(AngleUnit angleUnit, double angle) {
         return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
     }
-    private String formatDegrees(double degrees){
+
+    String formatDegrees(double degrees){
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
 }

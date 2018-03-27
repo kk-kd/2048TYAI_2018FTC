@@ -12,8 +12,8 @@ import org.firstinspires.ftc.teamcode.BaseClasses.VuMarkIdentification;
 /**
  * Created by candy on 08/02/2018,and.
  */
-@Autonomous(name = "AutoRedMid", group = "Auto")
-public class AutoRedMid extends LinearOpMode{
+@Autonomous(name = "AutoRedCornerEncoder", group = "Auto")
+public class AutoRedCornerEncoder extends LinearOpMode{
 
     OmniDrive robot;
     VuMarkIdentification vuforia;
@@ -61,7 +61,7 @@ public class AutoRedMid extends LinearOpMode{
         servoController.jewDown1();
         sleep(1500);
         rotationPower = servoController.determineRotation(ServoController.Color.RED);
-        while (flag <= 50 && rotationPower == 0.0){
+        while (flag <= 50 && rotationPower == 0.0){                                         //TODO
             rotationPower = servoController.determineRotation(ServoController.Color.RED);
             flag++;
         }
@@ -74,8 +74,6 @@ public class AutoRedMid extends LinearOpMode{
         robot.moveRobot(0,0,0);
         servoController.jewBack();
         sleep(400);
-        robot.moveRobot(0,0,0);
-        sleep(400);
         robot.moveRobot(0,0,-rotationPower);
         sleep(300);
         robot.moveRobot(0,0,0);
@@ -84,49 +82,47 @@ public class AutoRedMid extends LinearOpMode{
         telemetry.update();
 
         robot.moveRobot(-0.2,0,0);
-        sleep(1500);
+        sleep(2000);
         telemetry.addData("status", "move finished");
         robot.moveRobot(0,0,0);
 
-        robot.moveRobot(0,0,1);
-        sleep(600);
-        robot.moveRobot(0,0,0);
-        sleep(600);
-        robot.moveRobot(0,0,1);
-        sleep(600);
+        robot.moveRobot(-0.3,0,0);
+        sleep(2000);
 
         //Move
         switch (vuMark){
             case LEFT:
-                forwardDistance = 150;
+                forwardDistance = 550;
                 break;
             case CENTER:
-                forwardDistance = 450;
+                forwardDistance = 300;
                 break;
             case RIGHT:
-                forwardDistance = 830;
+                forwardDistance = 100;
                 break;
         }
         sleep(1000);
-        robot.moveRobot(-0.2,0,0);
-        sleep(900);
-        robot.encoderMoveForward(forwardDistance,3,-0.3);
-        robot.moveRobot(0,0,0);
-
+        robot.moveRobot(0.2,0,0);
+        sleep(800);
         //Put block
-        robot.encoderMoveTurn(1000,3,-0.4);
-        robot.moveRobot(0,0,0);
+        robot.encoderMoveTurn(1300,4,0.4);
         sleep(1000);
-        robot.moveRobot(-0.25,0,0);
+        robot.encoderMoveForward(forwardDistance,3,-0.3);
+        sleep(1000);
+        robot.encoderMoveTurn(1000,4,0.4);
+
+        robot.moveRobot(-0.2,0,0);
         sleep(500);
+        robot.moveRobot(0,0,0);
 
         servoController.tiltBoard();
-        robot.moveRobot(0,0,0);
-        sleep(2000);
+        sleep(1500);
         servoController.horizontalBoard();
         sleep(1000);
         robot.moveRobot(-0.25,0,0);
         sleep(500);
+        robot.moveRobot(-0.25,0,0);
+        sleep(100);
 
         robot.moveRobot(0.3,0,0);
         sleep(300);
